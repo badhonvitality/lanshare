@@ -30,8 +30,9 @@
 ## ✨ Features
 
 - ⚡ **Ultra Low Latency**: Direct Peer-to-Peer WebRTC connection inside your LAN.
-- 📱 **Mobile First Viewer**: Beautiful, gesture-friendly mobile UI with horizontal orientation lock.
-- 🔒 **Secure by Default**: Streams never touch the cloud. Self-signed SSL included.
+- 🔒 **Enterprise Security**: 4-digit PIN authentication to protect your screen, plus self-signed SSL.
+- 📱 **Progressive Web App (PWA)**: Installable on any device for a native-like experience.
+- 🌍 **Multi-language (i18n)**: Fully translated interfaces in English and Bengali (বাংলা).
 - 📷 **Built-in QR Scanner**: Scan to connect instantly without typing IP addresses.
 - 🌐 **Zero-config mDNS**: Connect via `https://lanshare.local` automatically.
 - 🎨 **Premium UI**: Smooth animations powered by Lenis and Framer-like aesthetics.
@@ -45,6 +46,7 @@
 - **Real-time Signaling**: [Socket.io](https://socket.io/)
 - **Streaming**: [WebRTC (RTCPeerConnection)](https://webrtc.org/)
 - **State Management**: [Zustand](https://github.com/pmndrs/zustand)
+- **PWA**: [@serwist/next](https://serwist.pages.dev/)
 - **Package Manager**: [Bun](https://bun.sh/)
 
 ---
@@ -58,12 +60,12 @@ sequenceDiagram
     participant V as Viewer (Mobile)
     
     Note over H,S: Connect via wss://lanshare.local
-    H->>S: Create Room & Join
+    H->>S: Create Room (Generates 4-digit PIN)
     Note over V,S: Connect via QR Code URL
-    V->>S: Join Room
+    V->>S: Join Room (Requires PIN)
     
     rect rgb(30, 30, 30)
-    Note over H,V: WebRTC Peer-to-Peer Handshake
+    Note over H,V: WebRTC Peer-to-Peer Handshake (If PIN valid)
     H->>V: SDP Offer (via Server)
     V->>H: SDP Answer (via Server)
     H-->>V: ICE Candidates
