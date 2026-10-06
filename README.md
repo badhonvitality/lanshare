@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+  <img src="./src/app/icon.svg" alt="LAN Screen Share Logo" width="120" height="120" />
 
-## Getting Started
+  # LAN Screen Share 🚀
 
-First, run the development server:
+  **High-performance, zero-config local network screen sharing.**
+  <br />
+  *Watch your PC screen on your mobile device instantly, securely, and without the public internet.*
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+  <br />
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+  ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+  ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)
+  ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+  ![WebRTC](https://img.shields.io/badge/WebRTC-333333?style=for-the-badge&logo=webrtc&logoColor=white)
+  ![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)
+  ![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)
+  
+  <br />
+  
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  [![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
+</div>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<hr />
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✨ Features
 
-## Learn More
+- ⚡ **Ultra Low Latency**: Direct Peer-to-Peer WebRTC connection inside your LAN.
+- 📱 **Mobile First Viewer**: Beautiful, gesture-friendly mobile UI with horizontal orientation lock.
+- 🔒 **Secure by Default**: Streams never touch the cloud. Self-signed SSL included.
+- 📷 **Built-in QR Scanner**: Scan to connect instantly without typing IP addresses.
+- 🌐 **Zero-config mDNS**: Connect via `https://lanshare.local` automatically.
+- 🎨 **Premium UI**: Smooth animations powered by Lenis and Framer-like aesthetics.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Tech Stack
+- **Framework**: [Next.js 15 (App Router)](https://nextjs.org/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Real-time Signaling**: [Socket.io](https://socket.io/)
+- **Streaming**: [WebRTC (RTCPeerConnection)](https://webrtc.org/)
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
+- **Package Manager**: [Bun](https://bun.sh/)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🚀 Quick Start
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Install dependencies**:
+   ```bash
+   bun install
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. **Start the server**:
+   ```bash
+   bun run server.ts
+   # OR just double-click start.bat on Windows
+   ```
+
+3. **Host a stream**:
+   Open `https://localhost` on your PC, click **Start Sharing**, and choose the screen or window.
+
+4. **Connect from Mobile**:
+   Open `https://lanshare.local` on your phone (ensure you're on the same Wi-Fi), click **Scan to Connect**, and scan the QR code displayed on your PC.
+
+*(Note: Because this app generates its own self-signed SSL certificate for local HTTPS, you may need to click "Advanced -> Proceed" in your browser warning the first time you connect).*
+
+---
+
+## 💖 Credits & Acknowledgment
+
+This project is proudly brought to you by:
+- **Badhon Vitality**
+- **Webda Studio** — [https://webda.in](https://webda.in)
+
+We believe in open source and empowering developers with secure, privacy-first local tools.
+
+---
+
+## 💬 Support
+
+If you need help setting this up, encountered a bug, or just want to chat:
+- **Discord**: `@badhonvitality`
+
+Feel free to open an issue or submit a pull request! Please make sure to read our [Code of Conduct](./CODE_OF_CONDUCT.md).
+
+---
+<div align="center">
+  <i>Built with ❤️ for the Open Source Community.</i>
+</div>
