@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  lanshare:
+    build: .
+    container_name: lan-screen-share
+    ports:
+      - "443:443"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    network_mode: "host" # Required for mDNS (lanshare.local) to work correctly

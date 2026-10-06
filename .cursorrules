@@ -1,0 +1,9 @@
+# LAN Screen Share - AI Guidelines
+
+- **Architecture**: This app uses WebRTC for peer-to-peer streaming and Socket.io via a custom Node.js server for signaling.
+- **Rules**:
+  - Always prefer explicit types in TypeScript.
+  - No `any` types allowed.
+  - Maintain the existing UI aesthetic (Tailwind CSS, Lenis, Lucide icons).
+  - Do not route any streaming data through the internet or signaling server. P2P WebRTC only.
+  - Self-signed SSL is mandatory for `getUserMedia` access on mobile.
