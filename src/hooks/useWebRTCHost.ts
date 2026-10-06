@@ -29,7 +29,7 @@ export function useWebRTCHost() {
         (displayMediaOptions.video as MediaTrackConstraints) = {
           ...displayMediaOptions.video as MediaTrackConstraints,
           frameRate: { ideal: fps, max: fps },
-          // @ts-ignore
+          // @ts-expect-error
           resizeMode: 'none', // Prevent scaling for sharper text
         };
       } else {
@@ -65,7 +65,7 @@ export function useWebRTCHost() {
       setError("Failed to start screen share. Permission denied or unsupported.");
       setConnectionState('error');
     }
-  }, [quality, fps, streamMode, setRoom, setConnectionState, setError]);
+  }, [quality, fps, streamMode, setRoom, setConnectionState, setError, stopScreenShare]);
 
   const stopScreenShare = useCallback(() => {
     if (stream) {
@@ -91,7 +91,7 @@ export function useWebRTCHost() {
         };
         
         if (streamMode === 'source' || quality === 'source') {
-          // @ts-ignore
+          // @ts-expect-error
           constraints.resizeMode = 'none';
         } else {
           const height = quality === '1080p' ? 1080 : quality === '720p' ? 720 : quality === '480p' ? 480 : 1080;

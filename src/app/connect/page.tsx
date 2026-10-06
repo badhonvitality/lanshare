@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Html5Qrcode } from 'html5-qrcode';
-import { ArrowLeft, Camera, ShieldAlert } from 'lucide-react';
+import { ArrowLeft, ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ConnectPage() {
@@ -42,7 +42,7 @@ export default function ConnectPage() {
               }).catch(console.error);
             }
           },
-          (errorMessage) => {
+          () => {
             // Ignore normal read errors
           }
         );

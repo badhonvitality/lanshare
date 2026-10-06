@@ -88,7 +88,7 @@ export function useWebRTCViewer(targetRoomId: string) {
       }
     };
 
-    const handleIceCandidate = async ({ sender, candidate }: { sender: string, candidate: RTCIceCandidateInit }) => {
+    const handleIceCandidate = async ({ candidate }: { sender: string, candidate: RTCIceCandidateInit }) => {
       const pc = pcRef.current;
       if (pc) {
         if (!pc.remoteDescription) {
