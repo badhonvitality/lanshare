@@ -4,12 +4,15 @@ import { useEffect, useState, useRef } from 'react';
 import { useWebRTCHost } from '@/hooks/useWebRTCHost';
 import { useRoomStore } from '@/store/useRoomStore';
 import { QRCodeSVG } from 'qrcode.react';
-import { MonitorUp, StopCircle, Users, Copy, Settings2, Activity, Link as LinkIcon, Monitor, Film } from 'lucide-react';
+import { MonitorUp, StopCircle, Users, Copy, Settings2, Activity, Link as LinkIcon, Monitor, Film, Lock, Globe } from 'lucide-react';
 import { socket } from '@/lib/socket';
+import { useTranslation, useI18nStore } from '@/lib/i18n';
 
 export default function HostPage() {
   const { stream, startScreenShare, stopScreenShare } = useWebRTCHost();
-  const { roomId, viewersCount, connectionState, quality, fps, streamMode, setQuality, setFps, setStreamMode, error } = useRoomStore();
+  const { roomId, roomPin, viewersCount, connectionState, quality, fps, streamMode, setQuality, setFps, setStreamMode, error } = useRoomStore();
+  const { t, language } = useTranslation();
+  const { setLanguage } = useI18nStore();
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const [lanIp, setLanIp] = useState<string>('');
@@ -49,14 +52,23 @@ export default function HostPage() {
           <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center border border-white/10">
             <Monitor className="w-4 h-4" />
           </div>
-          Host Dashboard
+          {t('hostDashboard')}
         </h1>
-        {connectionState === 'connected' && (
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 text-sm font-medium">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            LIVE
-          </div>
-        )}
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={() => setLanguage(language === 'en' ? 'bn' : 'en')}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-colors text-sm"
+          >
+            <Globe className="w-4 h-4" />
+            {language === 'en' ? 'বাংলা' : 'English'}
+          </button>
+          {connectionState === 'connected' && (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 text-sm font-medium">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              {t('live')}
+            </div>
+          )}
+        </div>
       </header>
 
       {error && (
@@ -80,7 +92,7 @@ export default function HostPage() {
             ) : (
               <div className="flex flex-col items-center gap-4 text-white/40">
                 <MonitorUp className="w-12 h-12 opacity-50" />
-                <p className="font-medium">Ready to share screen</p>
+                <p className="font-medium">{t('readyToShare')}</p>
               </div>
             )}
             
@@ -105,7 +117,7 @@ export default function HostPage() {
                 className="flex-1 h-14 bg-white text-black font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-white/90 transition-colors active:scale-[0.98]"
               >
                 <MonitorUp className="w-5 h-5" />
-                Start Sharing
+                {t('startSharing')}
               </button>
             ) : (
               <button 
@@ -113,7 +125,7 @@ export default function HostPage() {
                 className="flex-1 h-14 bg-red-500 text-white font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-red-600 transition-colors active:scale-[0.98]"
               >
                 <StopCircle className="w-5 h-5" />
-                Stop Sharing
+                {t('stopSharing')}
               </button>
             )}
           </div>
@@ -124,17 +136,17 @@ export default function HostPage() {
           {stream && shareUrl ? (
             <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 space-y-6">
               <div>
-                <h3 className="text-sm font-medium text-white/50 uppercase tracking-wider mb-4">Viewers</h3>
+                <h3 className="text-sm font-medium text-white/50 uppercase tracking-wider mb-4">{t('viewers')}</h3>
                 <div className="flex items-center gap-3 text-2xl font-semibold text-white">
                   <Users className="w-6 h-6 text-white/40" />
-                  {viewersCount} connected
+                  {viewersCount} {t('connected')}
                 </div>
               </div>
 
               <div className="h-px w-full bg-white/10" />
 
               <div>
-                <h3 className="text-sm font-medium text-white/50 uppercase tracking-wider mb-4">Share</h3>
+                <h3 className="text-sm font-medium text-white/50 uppercase tracking-wider mb-4">{t('share')}</h3>
                 <div className="bg-white p-4 rounded-xl flex items-center justify-center mb-4">
                   <QRCodeSVG value={shareUrl} size={160} level="M" />
                 </div>
@@ -144,47 +156,56 @@ export default function HostPage() {
                     onClick={copyLink}
                     className="p-2 bg-white/10 rounded-md hover:bg-white/20 transition-colors text-white"
                   >
-                    {copied ? <span className="text-xs font-medium px-1">Copied</span> : <Copy className="w-4 h-4" />}
+                    {copied ? <span className="text-xs font-medium px-1">{t('copied')}</span> : <Copy className="w-4 h-4" />}
                   </button>
                 </div>
+                {roomPin && (
+                  <div className="mt-4 flex items-center justify-between bg-red-500/10 border border-red-500/20 p-3 rounded-xl">
+                    <div className="flex items-center gap-2 text-red-400">
+                      <Lock className="w-4 h-4" />
+                      <span className="text-sm font-medium">{t('roomPin')}:</span>
+                    </div>
+                    <span className="text-xl font-mono font-bold tracking-widest text-white">{roomPin}</span>
+                  </div>
+                )}
               </div>
             </div>
           ) : (
             <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center h-full min-h-[300px] text-white/30">
               <LinkIcon className="w-8 h-8 mb-3 opacity-50" />
-              <p className="text-sm max-w-[200px]">Share link and QR code will appear here</p>
+              <p className="text-sm max-w-[200px]">{t('sharePlaceholder')}</p>
             </div>
           )}
 
           <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 space-y-6">
             <h3 className="text-sm font-medium text-white/50 uppercase tracking-wider flex items-center gap-2">
-              <Settings2 className="w-4 h-4" /> Controls
+              <Settings2 className="w-4 h-4" /> {t('controls')}
             </h3>
             
             {/* Mode Selection */}
             <div className="space-y-3">
-              <label className="text-sm text-white/70">Stream Mode</label>
+              <label className="text-sm text-white/70">{t('streamMode')}</label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() => setStreamMode('source')}
                   className={`p-3 rounded-xl border flex flex-col gap-1 items-start text-left transition-colors ${streamMode === 'source' ? 'bg-white/10 border-white/20' : 'bg-transparent border-white/5 hover:bg-white/5'}`}
                 >
-                  <span className="font-medium text-sm text-white flex items-center gap-1.5"><Monitor className="w-3 h-3"/> Source</span>
-                  <span className="text-xs text-white/40">Crisp text, code</span>
+                  <span className="font-medium text-sm text-white flex items-center gap-1.5"><Monitor className="w-3 h-3"/> {t('source')}</span>
+                  <span className="text-xs text-white/40">{t('sourceDesc')}</span>
                 </button>
                 <button
                   onClick={() => setStreamMode('smooth')}
                   className={`p-3 rounded-xl border flex flex-col gap-1 items-start text-left transition-colors ${streamMode === 'smooth' ? 'bg-white/10 border-white/20' : 'bg-transparent border-white/5 hover:bg-white/5'}`}
                 >
-                  <span className="font-medium text-sm text-white flex items-center gap-1.5"><Film className="w-3 h-3"/> Smooth</span>
-                  <span className="text-xs text-white/40">Video, motion</span>
+                  <span className="font-medium text-sm text-white flex items-center gap-1.5"><Film className="w-3 h-3"/> {t('smooth')}</span>
+                  <span className="text-xs text-white/40">{t('smoothDesc')}</span>
                 </button>
               </div>
             </div>
 
             {/* Resolution */}
             <div className="space-y-3">
-              <label className="text-sm text-white/70">Resolution</label>
+              <label className="text-sm text-white/70">{t('resolution')}</label>
               <select 
                 value={quality}
                 onChange={(e) => setQuality(e.target.value as "source" | "1080p" | "720p" | "480p")}
@@ -199,7 +220,7 @@ export default function HostPage() {
 
             {/* FPS */}
             <div className="space-y-3">
-              <label className="text-sm text-white/70">Framerate</label>
+              <label className="text-sm text-white/70">{t('framerate')}</label>
               <div className="grid grid-cols-3 gap-2">
                 {[15, 30, 60].map((f) => (
                   <button

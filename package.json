@@ -10,6 +10,8 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@serwist/next": "^9.5.13",
+    "@serwist/precaching": "^9.5.13",
     "@types/qrcode.react": "^3.0.0",
     "clsx": "^2.1.1",
     "framer-motion": "^14.0.0",

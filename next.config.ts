@@ -16,9 +16,17 @@ function getLocalIps() {
   return ips;
 }
 
+import withSerwistInit from "@serwist/next";
+
+const withSerwist = withSerwistInit({
+  swSrc: "src/app/sw.ts",
+  swDest: "public/sw.js",
+});
+
 const nextConfig: NextConfig = {
   // Allow WebSockets / HMR from local network IPs
   allowedDevOrigins: getLocalIps(),
+  turbopack: {}
 };
 
-export default nextConfig;
+export default withSerwist(nextConfig);

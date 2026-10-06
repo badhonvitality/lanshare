@@ -17,14 +17,14 @@ export function useWebRTCViewer(targetRoomId: string) {
   
   const { setConnectionState, setError, setRoom, roomId } = useRoomStore();
 
-  const connect = useCallback(() => {
+  const connect = useCallback((pin: string) => {
     if (!socket.connected) {
       socket.connect();
     }
     
     setConnectionState('connecting');
     setRoom(targetRoomId, false);
-    socket.emit('join-room', { roomId: targetRoomId });
+    socket.emit('join-room', { roomId: targetRoomId, pin });
   }, [targetRoomId, setConnectionState, setRoom]);
 
   const disconnect = useCallback(() => {

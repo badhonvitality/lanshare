@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 interface RoomState {
+  roomPin: string | null;
   roomId: string | null;
   isHost: boolean;
   viewersCount: number;
@@ -9,6 +10,7 @@ interface RoomState {
   quality: 'source' | '1080p' | '720p' | '480p';
   fps: 15 | 30 | 60;
   streamMode: 'source' | 'smooth' | 'auto';
+  setRoomPin: (pin: string | null) => void;
   setRoom: (id: string | null, isHost: boolean) => void;
   setViewersCount: (count: number) => void;
   setConnectionState: (state: RoomState['connectionState']) => void;
@@ -19,6 +21,7 @@ interface RoomState {
 }
 
 export const useRoomStore = create<RoomState>((set) => ({
+  roomPin: null,
   roomId: null,
   isHost: false,
   viewersCount: 0,
@@ -27,6 +30,7 @@ export const useRoomStore = create<RoomState>((set) => ({
   quality: '1080p',
   fps: 30,
   streamMode: 'auto',
+  setRoomPin: (pin) => set({ roomPin: pin }),
   setRoom: (id, isHost) => set({ roomId: id, isHost }),
   setViewersCount: (count) => set({ viewersCount: count }),
   setConnectionState: (state) => set({ connectionState: state }),

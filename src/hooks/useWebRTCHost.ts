@@ -13,7 +13,7 @@ export function useWebRTCHost() {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const peersRef = useRef<Map<string, RTCPeerConnection>>(new Map());
   const iceQueuesRef = useRef<Map<string, RTCIceCandidateInit[]>>(new Map());
-  const { roomId, quality, fps, streamMode, setConnectionState, setError, setRoom } = useRoomStore();
+  const { roomId, quality, fps, streamMode, setConnectionState, setError, setRoom, setRoomPin } = useRoomStore();
 
   const stopScreenShare = useCallback(() => {
     if (stream) {
@@ -68,9 +68,11 @@ export function useWebRTCHost() {
       }
 
       const newRoomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const newRoomPin = Math.floor(1000 + Math.random() * 9000).toString();
       setRoom(newRoomId, true);
+      setRoomPin(newRoomPin);
       
-      socket.emit('create-room', { roomId: newRoomId });
+      socket.emit('create-room', { roomId: newRoomId, pin: newRoomPin });
       setConnectionState('connected');
 
     } catch (err) {
@@ -78,7 +80,7 @@ export function useWebRTCHost() {
       setError("Failed to start screen share. Permission denied or unsupported.");
       setConnectionState('error');
     }
-  }, [quality, fps, streamMode, setRoom, setConnectionState, setError, stopScreenShare]);
+  }, [quality, fps, streamMode, setRoom, setRoomPin, setConnectionState, setError, stopScreenShare]);
 
   // Handle renegotiation if settings change
   useEffect(() => {

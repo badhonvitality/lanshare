@@ -2,12 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useWebRTCViewer } from '@/hooks/useWebRTCViewer';
-import { Maximize, Minimize, Settings, Activity, WifiOff, RotateCcw } from 'lucide-react';
+import { Maximize, Minimize, Settings, Activity, WifiOff, RotateCcw, Lock } from 'lucide-react';
 import { useRoomStore } from '@/store/useRoomStore';
+import { useTranslation } from '@/lib/i18n';
 
 export default function ViewerClient({ roomId }: { roomId: string }) {
   const { stream, connect, disconnect, hostQuality } = useWebRTCViewer(roomId);
   const { connectionState, error } = useRoomStore();
+  const { t } = useTranslation();
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -16,11 +18,8 @@ export default function ViewerClient({ roomId }: { roomId: string }) {
   const [objectFit, setObjectFit] = useState<'contain' | 'cover'>('contain');
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Initialize connection
-  useEffect(() => {
-    connect();
-    return () => disconnect();
-  }, [connect, disconnect]);
+  const [pin, setPin] = useState('');
+  const [hasEnteredPin, setHasEnteredPin] = useState(false);
 
   // Handle stream attachment
   useEffect(() => {
@@ -28,6 +27,19 @@ export default function ViewerClient({ roomId }: { roomId: string }) {
       videoRef.current.srcObject = stream;
     }
   }, [stream]);
+
+  const handleJoin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pin.length === 4) {
+      setHasEnteredPin(true);
+      connect(pin);
+    }
+  };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => disconnect();
+  }, [disconnect]);
 
   // Handle fullscreen
   const toggleFullscreen = async () => {
@@ -68,14 +80,55 @@ export default function ViewerClient({ roomId }: { roomId: string }) {
     return (
       <div className="fixed inset-0 bg-black flex flex-col items-center justify-center p-6 text-center">
         <WifiOff className="w-12 h-12 text-red-500 mb-4" />
-        <h2 className="text-xl font-bold text-white mb-2">Connection Failed</h2>
+        <h2 className="text-xl font-bold text-white mb-2">{t('connectionFailed')}</h2>
         <p className="text-white/60 mb-6">{error}</p>
         <button 
-          onClick={connect}
-          className="px-6 py-3 bg-white text-black font-semibold rounded-full"
+          onClick={() => {
+            if (error === "Invalid PIN") {
+              setHasEnteredPin(false);
+              setPin('');
+            } else {
+              connect(pin);
+            }
+          }}
+          className="px-6 py-3 bg-white text-black font-semibold rounded-full hover:bg-white/90"
         >
-          Try Reconnecting
+          {error === "Invalid PIN" ? t('tryAgain') : t('tryReconnecting')}
         </button>
+      </div>
+    );
+  }
+
+  if (!hasEnteredPin) {
+    return (
+      <div className="fixed inset-0 bg-black flex flex-col items-center justify-center p-6 touch-none">
+        <div className="w-full max-w-sm bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl flex flex-col items-center">
+          <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mb-6">
+            <Lock className="w-8 h-8 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-white mb-2">{t('enterPin')}</h2>
+          <p className="text-white/50 text-center mb-8 text-sm">
+            {t('enterPinDesc')}
+          </p>
+          <form onSubmit={handleJoin} className="w-full flex flex-col gap-4">
+            <input 
+              type="text" 
+              maxLength={4}
+              value={pin}
+              onChange={(e) => setPin(e.target.value.replace(/[^0-9]/g, ''))}
+              placeholder="0000"
+              className="w-full bg-black/50 border border-white/20 rounded-xl px-4 py-4 text-center text-3xl font-mono text-white tracking-widest outline-none focus:border-white/50 transition-colors"
+              autoFocus
+            />
+            <button 
+              type="submit"
+              disabled={pin.length !== 4}
+              className="w-full py-4 rounded-xl bg-white text-black font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/90 transition-colors"
+            >
+              {t('joinRoom')}
+            </button>
+          </form>
+        </div>
       </div>
     );
   }
@@ -102,7 +155,7 @@ export default function ViewerClient({ roomId }: { roomId: string }) {
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin mb-4" />
-          <p className="text-white/60 font-medium">Connecting to host...</p>
+          <p className="text-white/60 font-medium">{t('connectingToHost')}</p>
         </div>
       )}
 
@@ -115,7 +168,7 @@ export default function ViewerClient({ roomId }: { roomId: string }) {
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${connectionState === 'connected' ? 'bg-green-500' : 'bg-yellow-500 animate-pulse'}`} />
             <span className="text-white font-medium text-sm drop-shadow-md">
-              {connectionState === 'connected' ? 'LIVE' : 'Connecting'}
+              {connectionState === 'connected' ? t('live') : t('connecting')}
             </span>
           </div>
           
@@ -157,7 +210,7 @@ export default function ViewerClient({ roomId }: { roomId: string }) {
                 onClick={(e) => { e.stopPropagation(); setObjectFit(f => f === 'contain' ? 'cover' : 'contain'); }}
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 active:bg-white/30 transition-colors"
               >
-                <span className="text-[10px] font-bold tracking-wider">{objectFit === 'contain' ? 'FIT' : 'FILL'}</span>
+                <span className="text-[10px] font-bold tracking-wider">{objectFit === 'contain' ? t('fit') : t('fill')}</span>
               </button>
               
               <button 

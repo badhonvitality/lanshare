@@ -70,16 +70,20 @@ app.prepare().then(async () => {
   io.on("connection", (socket) => {
     console.log("Client connected:", socket.id);
 
-    socket.on("create-room", ({ roomId }) => {
-      rooms.set(roomId, { host: socket.id, viewers: new Set() });
+    socket.on("create-room", ({ roomId, pin }) => {
+      rooms.set(roomId, { host: socket.id, viewers: new Set(), pin });
       socket.join(roomId);
-      console.log(`Room ${roomId} created by ${socket.id}`);
-      socket.emit("room-created", { roomId, lanIp: localIp, localDomain: "lanshare.local", port });
+      console.log(`Room ${roomId} created by ${socket.id} with pin ${pin ? 'yes' : 'no'}`);
+      socket.emit("room-created", { roomId, lanIp: localIp, localDomain: "lanshare.local", port, hasPin: !!pin });
     });
 
-    socket.on("join-room", ({ roomId }) => {
+    socket.on("join-room", ({ roomId, pin }) => {
       const room = rooms.get(roomId);
       if (room) {
+        if (room.pin && room.pin !== pin) {
+          socket.emit("error", { message: "Invalid PIN" });
+          return;
+        }
         room.viewers.add(socket.id);
         socket.join(roomId);
         console.log(`Viewer ${socket.id} joined room ${roomId}`);
