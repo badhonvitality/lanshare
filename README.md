@@ -25,6 +25,8 @@
 
 <hr />
 
+> **⭐️ Like this project?** If you find LAN Screen Share helpful or use it regularly, please consider giving it a star on GitHub! Your support motivates us and helps more people find this open-source tool. 🙏
+
 ## ✨ Features
 
 - ⚡ **Ultra Low Latency**: Direct Peer-to-Peer WebRTC connection inside your LAN.
