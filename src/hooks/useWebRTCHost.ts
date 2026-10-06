@@ -15,6 +15,19 @@ export function useWebRTCHost() {
   const iceQueuesRef = useRef<Map<string, RTCIceCandidateInit[]>>(new Map());
   const { roomId, quality, fps, streamMode, setConnectionState, setError, setRoom } = useRoomStore();
 
+  const stopScreenShare = useCallback(() => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+      setStream(null);
+    }
+    peersRef.current.forEach(pc => pc.close());
+    peersRef.current.clear();
+    iceQueuesRef.current.clear();
+    socket.disconnect();
+    setRoom(null, false);
+    setConnectionState('disconnected');
+  }, [stream, setRoom, setConnectionState]);
+
   const startScreenShare = useCallback(async () => {
     try {
       const displayMediaOptions: DisplayMediaStreamOptions = {
@@ -29,7 +42,7 @@ export function useWebRTCHost() {
         (displayMediaOptions.video as MediaTrackConstraints) = {
           ...displayMediaOptions.video as MediaTrackConstraints,
           frameRate: { ideal: fps, max: fps },
-          // @ts-expect-error
+          // @ts-expect-error - resizeMode is not yet in TS definitions
           resizeMode: 'none', // Prevent scaling for sharper text
         };
       } else {
@@ -67,19 +80,6 @@ export function useWebRTCHost() {
     }
   }, [quality, fps, streamMode, setRoom, setConnectionState, setError, stopScreenShare]);
 
-  const stopScreenShare = useCallback(() => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
-      setStream(null);
-    }
-    peersRef.current.forEach(pc => pc.close());
-    peersRef.current.clear();
-    iceQueuesRef.current.clear();
-    socket.disconnect();
-    setRoom(null, false);
-    setConnectionState('disconnected');
-  }, [stream, setRoom, setConnectionState]);
-
   // Handle renegotiation if settings change
   useEffect(() => {
     if (stream && peersRef.current.size > 0) {
@@ -91,7 +91,7 @@ export function useWebRTCHost() {
         };
         
         if (streamMode === 'source' || quality === 'source') {
-          // @ts-expect-error
+          // @ts-expect-error - resizeMode is not yet in TS definitions
           constraints.resizeMode = 'none';
         } else {
           const height = quality === '1080p' ? 1080 : quality === '720p' ? 720 : quality === '480p' ? 480 : 1080;

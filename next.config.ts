@@ -18,7 +18,6 @@ function getLocalIps() {
 
 const nextConfig: NextConfig = {
   // Allow WebSockets / HMR from local network IPs
-  // @ts-expect-error
   allowedDevOrigins: getLocalIps(),
 };
 
