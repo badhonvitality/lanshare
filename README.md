@@ -20,6 +20,7 @@
   
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
   [![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://opensource.org/)
+  [![Build Test](https://github.com/badhonvitality/lanshare/actions/workflows/build.yml/badge.svg)](https://github.com/badhonvitality/lanshare/actions)
 </div>
 
 <hr />
@@ -79,12 +80,16 @@ We believe in open source and empowering developers with secure, privacy-first l
 
 ---
 
-## 💬 Support
+## 💬 Support & Contributing
 
-If you need help setting this up, encountered a bug, or just want to chat:
+If you need help setting this up or just want to chat:
 - **Discord**: `@badhonvitality`
 
-Feel free to open an issue or submit a pull request! Please make sure to read our [Code of Conduct](./CODE_OF_CONDUCT.md).
+### 🐛 Reporting Bugs & Requesting Features
+- **[Report a Bug](https://github.com/badhonvitality/lanshare/issues/new?assignees=&labels=bug&projects=&template=bug_report.md&title=%5BBUG%5D+)**: Found something broken? Let us know!
+- **[Request a Feature](https://github.com/badhonvitality/lanshare/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.md&title=%5BFEATURE%5D+)**: Have a great idea for the app?
+
+Feel free to submit a pull request! Please make sure to read our [Code of Conduct](./CODE_OF_CONDUCT.md) and [Contributing Guidelines](./CONTRIBUTING.md).
 
 ---
 <div align="center">
